@@ -10,4 +10,9 @@ public class HomeController {
     public String home() {
         return "Добро пожаловать во вселенную!";
     }
+
+    @GetMapping("/about")
+    public String about() {
+        return "This is project about everything related to space: planets, stars, unknown objects etc.";
+    }
 }
