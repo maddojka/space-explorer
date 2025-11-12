@@ -10,23 +10,24 @@ import java.util.List;
 import java.util.Optional;
 
 @RestController
+@RequestMapping("/api/posts")
 public class PostController {
 
     private final List<Post> posts = new ArrayList<>();
 
-    @GetMapping("/posts")
+    @GetMapping
     public ResponseEntity<List<Post>> index(@RequestParam(defaultValue = "10") Integer limit) {
         var result = posts.stream().limit(limit).toList();
         return ResponseEntity.ok().body(result);
     }
 
-    @PostMapping("/posts")
+    @PostMapping
     public ResponseEntity<Post> create(@RequestBody Post post) {
         posts.add(post);
         return ResponseEntity.status(HttpStatus.CREATED).body(post);
     }
 
-    @GetMapping("/posts/{id}")
+    @GetMapping("/{id}")
     public ResponseEntity<Optional<Post>> show(@PathVariable String id) {
         var post = posts.stream()
                 .filter(p -> p.getTitle().equals(id))
@@ -38,7 +39,7 @@ public class PostController {
         }
     }
 
-    @PutMapping("/posts/{id}")
+    @PutMapping("/{id}")
     public ResponseEntity<Post> update(@PathVariable String id, @RequestBody Post data) {
         var maybePost = posts.stream()
                 .filter(p -> p.getTitle().equals(id))
@@ -54,7 +55,7 @@ public class PostController {
         return ResponseEntity.notFound().build();
     }
 
-    @DeleteMapping("/posts/{id}") // Удаление страницы
+    @DeleteMapping("/{id}") // Удаление страницы
     public ResponseEntity<Void> destroy(@PathVariable String id) {
         posts.removeIf(p -> p.getTitle().equals(id));
         return ResponseEntity.noContent().build();
