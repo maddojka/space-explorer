@@ -1,6 +1,10 @@
 package ru.soroko.space_explorer.controller;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 import ru.soroko.space_explorer.exception.ResourceNotFoundException;
@@ -25,5 +29,13 @@ public class PostController {
     public Post show(@PathVariable Long id) {
         return postRepository.findById(id).orElseThrow(() ->
                 new ResourceNotFoundException(id + " Not Found"));
+    }
+
+    @GetMapping("/posts")
+    public Page<Post> getPublishedPosts(
+            @RequestParam(defaultValue = "0") int page,
+            @RequestParam(defaultValue = "10") int size) {
+        Pageable pageable = PageRequest.of(page, size, Sort.by("createdAt").descending());
+        return postRepository.findByPublishedTrue(pageable);
     }
 }
