@@ -3,6 +3,7 @@ package ru.soroko.space_explorer.controller;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
+import ru.soroko.space_explorer.exception.ResourceNotFoundException;
 import ru.soroko.space_explorer.model.Post;
 import ru.soroko.space_explorer.repository.PostRepository;
 
@@ -22,7 +23,7 @@ public class PostController {
     @GetMapping("/posts/{id}")
     @ResponseStatus(HttpStatus.OK)
     public Post show(@PathVariable Long id) {
-        var post = postRepository.findById(id).get();
-        return post;
+        return postRepository.findById(id).orElseThrow(() ->
+                new ResourceNotFoundException(id + " Not Found"));
     }
 }
